@@ -11,7 +11,7 @@ namespace EvoltingStore.Pages
     {
         private EvoltingStoreContext context = new EvoltingStoreContext();
 
-        public void OnGet()
+        public void OnGet(int pageNumber)
         {
             List<Game> games = context.Games.Include(g => g.Genres).Include(g => g.Comments).Include(g => g.Users).OrderBy(g => g.Name).ToList();
             List<Genre> genres = context.Genres.ToList();
@@ -32,7 +32,7 @@ namespace EvoltingStore.Pages
             List<Boolean> selected = new List<Boolean>();
             List<Genre> genres = context.Genres.ToList();
 
-            if(genre.Count > 0)
+            if (genre.Count > 0)
             {
                 List<Genre> selectedGenre = new List<Genre>();
 
@@ -41,7 +41,7 @@ namespace EvoltingStore.Pages
                     selectedGenre.Add(genres[genreId - 1]);
                 }
 
-                foreach(var game in context.Games.Include(g => g.Genres).Include(g => g.Comments).Include(g => g.Users).ToList())
+                foreach (var game in context.Games.Include(g => g.Genres).Include(g => g.Comments).Include(g => g.Users).ToList())
                 {
                     HashSet<Genre> common = new HashSet<Genre>(game.Genres);
                     common.IntersectWith(selectedGenre);

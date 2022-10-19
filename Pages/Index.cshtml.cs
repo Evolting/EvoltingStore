@@ -25,6 +25,14 @@ namespace EvoltingStore.Pages
             ViewData["topFavourites"] = topFavourites;
             ViewData["latestRelease"] = latestRelease;
             ViewData["latestUpdate"] = latestUpdate;
+            String jsonUser = HttpContext.Session.GetString("user");
+            User user = null;
+            if (jsonUser != null)
+            {
+                user = Newtonsoft.Json.JsonConvert.DeserializeObject<User>(jsonUser);
+            }
+
+            ViewData["user"] = user;
         }
     }
 }

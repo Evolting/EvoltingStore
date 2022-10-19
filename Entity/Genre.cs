@@ -14,11 +14,5 @@ namespace EvoltingStore.Entity
         public string GenreName { get; set; } = null!;
 
         public virtual ICollection<Game> Games { get; set; }
-
-        public override bool Equals(object? obj)
-        {
-            return obj is Genre genre &&
-                   GenreId == genre.GenreId;
-        }
     }
 }

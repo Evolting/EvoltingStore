@@ -22,13 +22,14 @@ namespace EvoltingStore.Entity
         public virtual DbSet<Genre> Genres { get; set; } = null!;
         public virtual DbSet<Role> Roles { get; set; } = null!;
         public virtual DbSet<User> Users { get; set; } = null!;
+        public virtual DbSet<UserDetail> UserDetails { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseSqlServer("server=THEGHOST; database = EvoltingStore;user=sa;password=123;");
+                optionsBuilder.UseSqlServer("server=THEGHOST; database=EvoltingStore;user=sa; password=123");
             }
         }
 
@@ -218,18 +219,12 @@ namespace EvoltingStore.Entity
             {
                 entity.ToTable("User");
 
-                entity.HasIndex(e => e.Username, "Unique_username")
-                    .IsUnique();
-
                 entity.Property(e => e.UserId).HasColumnName("userId");
 
-                entity.Property(e => e.Email)
-                    .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasColumnName("email");
+                entity.Property(e => e.IsActive).HasColumnName("isActive");
 
                 entity.Property(e => e.Password)
-                    .HasMaxLength(50)
+                    .HasMaxLength(30)
                     .IsUnicode(false)
                     .HasColumnName("password");
 
@@ -245,6 +240,46 @@ namespace EvoltingStore.Entity
                     .HasForeignKey(d => d.RoleId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_User_Role");
+            });
+
+            modelBuilder.Entity<UserDetail>(entity =>
+            {
+                entity.HasKey(e => e.UserId);
+
+                entity.ToTable("UserDetail");
+
+                entity.Property(e => e.UserId)
+                    .ValueGeneratedNever()
+                    .HasColumnName("userId");
+
+                entity.Property(e => e.CreatedDate)
+                    .HasColumnType("date")
+                    .HasColumnName("createdDate");
+
+                entity.Property(e => e.Email)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasColumnName("email");
+
+                entity.Property(e => e.FirstName)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasColumnName("firstName");
+
+                entity.Property(e => e.Image)
+                    .HasColumnType("text")
+                    .HasColumnName("image");
+
+                entity.Property(e => e.LastName)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasColumnName("lastName");
+
+                entity.HasOne(d => d.User)
+                    .WithOne(p => p.UserDetail)
+                    .HasForeignKey<UserDetail>(d => d.UserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_UserDetail_User");
             });
 
             OnModelCreatingPartial(modelBuilder);

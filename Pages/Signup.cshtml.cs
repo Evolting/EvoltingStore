@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace EvoltingStore.Pages
 {
-    public class DetailModel : PageModel
+    public class SignupModel : PageModel
     {
         public void OnGet()
         {
