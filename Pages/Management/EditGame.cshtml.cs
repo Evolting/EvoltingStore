@@ -21,25 +21,51 @@ namespace EvoltingStore.Pages.Management
 
         public void OnGet(int gameId)
         {
-            Game game = context.Games.FirstOrDefault(g => g.GameId == gameId);
+            List<Genre> genres = context.Genres.ToList();
+            ViewData["genres"] = genres;
+            List<Boolean> selected = new List<Boolean>();
+            for (int i = 1; i <= genres.Count; i++)
+            {
+                selected.Add(false);
+            }
+
+            Game game = context.Games.Include(g => g.Genres).FirstOrDefault(g => g.GameId == gameId);
+
+            foreach(var g in game.Genres)
+            {
+                selected[g.GenreId-1] = true;
+            }
+            ViewData["selected"] = selected;
 
             GameRequirement minimum = context.GameRequirements.FirstOrDefault(gr => gr.GameId == gameId && gr.Type.Equals("minimum"));
             GameRequirement recommend = context.GameRequirements.FirstOrDefault(gr => gr.GameId == gameId && gr.Type.Equals("recommend"));
-
+            
             ViewData["game"] = game;
             ViewData["minimum"] = minimum;
             ViewData["recommend"] = recommend;
         }
 
-        public async Task<IActionResult> OnPost(IFormFile gameImg, Game game, GameRequirement minimum, GameRequirement recommend)
+        public async Task<IActionResult> OnPost(IFormFile gameImg, Game game, GameRequirement minimum, GameRequirement recommend, List<int> genres)
         {
+            var context = new EvoltingStoreContext();
+            List<Genre> allGenres = context.Genres.ToList();
+
             minimum.Type = "minimum";
             minimum.GameId = game.GameId;
 
             recommend.Type = "recommend";
             recommend.GameId = game.GameId;
 
-            Game g = context.Games.FirstOrDefault(g => g.GameId == game.GameId);
+            Game g = context.Games.Include(g => g.Genres).FirstOrDefault(g => g.GameId == game.GameId);
+
+            g.Genres.Clear();
+
+            foreach (var index in genres)
+            {
+                g.Genres.Add(allGenres[index - 1]);
+            }
+
+            context.SaveChanges();
 
             if (gameImg != null)
             {
@@ -74,7 +100,8 @@ namespace EvoltingStore.Pages.Management
             }
 
             game.ReleaseDate = g.ReleaseDate;
-            game.UpdateDate = DateTime.Now;
+            game.UpdateDate = g.UpdateDate;
+            game.Genres = g.Genres;
 
             context = new EvoltingStoreContext();
             context.Entry<Game>(game).State = EntityState.Modified;
@@ -85,26 +112,26 @@ namespace EvoltingStore.Pages.Management
 
             if (m == null)
             {
-                var context = new EvoltingStoreContext();
+                context = new EvoltingStoreContext();
                 context.GameRequirements.Add(minimum);
                 context.SaveChanges();
             }
             else
             {
-                var context = new EvoltingStoreContext();
+                context = new EvoltingStoreContext();
                 context.Entry<GameRequirement>(minimum).State = EntityState.Modified;
                 context.SaveChanges();
             }
 
             if (r == null)
             {
-                var context = new EvoltingStoreContext();
+                context = new EvoltingStoreContext();
                 context.GameRequirements.Add(recommend);
                 context.SaveChanges();
             }
             else
             {
-                var context = new EvoltingStoreContext();
+                context = new EvoltingStoreContext();
                 context.Entry<GameRequirement>(recommend).State = EntityState.Modified;
                 context.SaveChanges();
             }

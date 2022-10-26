@@ -1,7 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Runtime.Serialization;
 
 namespace EvoltingStore.Entity
 {
@@ -15,7 +14,6 @@ namespace EvoltingStore.Entity
         public string? Image { get; set; }
 
         [JsonIgnore]
-        [IgnoreDataMember]
         public virtual User User { get; set; } = null!;
     }
 }

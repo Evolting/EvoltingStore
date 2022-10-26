@@ -7,6 +7,9 @@
 
     var user = (String)HttpContext.Session.GetString("user");
     var userData = (User)Newtonsoft.Json.JsonConvert.DeserializeObject<User>(user);
+
+    var genres = (List<Genre>)TempData["genres"];
+
 }
 
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
@@ -136,12 +139,11 @@
         <div class="form-group">
           <label class="col-md-4 control-label" for="genres">GENRE</label>  
             <div class="col-md-4">
-                <select class="js-example-basic-multiple" name="states[]" multiple="multiple">
-                    <option value="AL">Alabama</option>
-                    <option value="WY">Wyoming</option>
-                    <option value="TE">Texas</option>
-                    <option value="SE">Seatle</option>
-                </select>
+                @foreach(var g in genres){
+                    <br/>
+                    <input type="checkbox" name="genres" value="@g.GenreId" />
+                    @g.GenreName
+                }
             </div>
         </div>
 

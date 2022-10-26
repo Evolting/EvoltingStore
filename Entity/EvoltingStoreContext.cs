@@ -39,20 +39,17 @@ namespace EvoltingStore.Entity
             {
                 entity.ToTable("Comment");
 
-                entity.Property(e => e.CommentId)
-                    .ValueGeneratedNever()
-                    .HasColumnName("commentId");
+                entity.Property(e => e.CommentId).HasColumnName("commentId");
 
-                entity.Property(e => e.Comment1)
+                entity.Property(e => e.Content)
                     .HasColumnType("text")
-                    .HasColumnName("comment");
+                    .HasColumnName("content");
 
                 entity.Property(e => e.GameId).HasColumnName("gameId");
 
-                entity.Property(e => e.Time)
-                    .IsRowVersion()
-                    .IsConcurrencyToken()
-                    .HasColumnName("time");
+                entity.Property(e => e.PostTime)
+                    .HasColumnType("datetime")
+                    .HasColumnName("postTime");
 
                 entity.Property(e => e.UserId).HasColumnName("userId");
 
@@ -218,6 +215,9 @@ namespace EvoltingStore.Entity
             modelBuilder.Entity<User>(entity =>
             {
                 entity.ToTable("User");
+
+                entity.HasIndex(e => e.Username, "Unique_username")
+                    .IsUnique();
 
                 entity.Property(e => e.UserId).HasColumnName("userId");
 

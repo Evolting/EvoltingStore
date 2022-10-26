@@ -11,6 +11,9 @@
     var game = (Game)ViewData["game"];
     var minimum = (GameRequirement)ViewData["minimum"];
     var recommend = (GameRequirement)ViewData["recommend"];
+
+    var genres = (List<Genre>)ViewData["genres"];
+    var selected = (List<Boolean>)ViewData["selected"];
 }
 
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
@@ -135,12 +138,12 @@
         <div class="form-group">
           <label class="col-md-4 control-label" for="genres">GENRE</label>  
             <div class="col-md-4">
-                <select class="js-example-basic-multiple" name="states[]" multiple="multiple">
-                    <option value="AL">Alabama</option>
-                    <option value="WY">Wyoming</option>
-                    <option value="TE">Texas</option>
-                    <option value="SE">Seatle</option>
-                </select>
+                @foreach (var g in genres)
+                {
+                    <br/>
+                    <input type="checkbox" name="genres" value="@g.GenreId" @(selected[genres.IndexOf(g)] ? "checked" : "")/>
+                    @g.GenreName
+                }
             </div>
         </div>
 
@@ -158,56 +161,56 @@
 
                 <!-- Text input-->
                 <div class="form-group">
-                  <label class="col-md-4 control-label" for="product_name_fr">OS</label>  
-                  <div class="col-md-4">
-                    <input name="minimum.Os" placeholder="Os" value=@(minimum != null ? minimum.Os : "") class="form-control input-md" type="text" required>
+                  <label class="col-md-6 control-label" for="product_name_fr">OS</label>  
+                  <div class="col-md-6">
+                    <input name="minimum.Os" placeholder="Os" class="form-control input-md" type="text" required value="@(minimum != null ? minimum.Os : "")" >
                   </div>
                 </div>
 
                 <!-- Textarea -->
                 <div class="form-group">
-                  <label class="col-md-4 control-label" for="product_name_fr">PROCESSOR</label>  
-                  <div class="col-md-4">                     
+                  <label class="col-md-6 control-label" for="product_name_fr">PROCESSOR</label>  
+                  <div class="col-md-6">                     
                     <textarea class="form-control input-md" placeholder="Processor" name="minimum.Processor" required>@(minimum != null ? minimum.Processor : "")</textarea>
                   </div>
                 </div>
 
                 <!-- Text input-->
                 <div class="form-group">
-                  <label class="col-md-4 control-label" for="product_name_fr">MEMORY</label>  
-                  <div class="col-md-4">
-                    <input name="minimum.Memory" placeholder="Memory" value=@(minimum != null ? minimum.Memory : "") class="form-control input-md" type="text" required>
+                  <label class="col-md-6 control-label" for="product_name_fr">MEMORY</label>  
+                  <div class="col-md-6">
+                    <input name="minimum.Memory" placeholder="Memory" value="@(minimum != null ? minimum.Memory : "")" class="form-control input-md" type="text" required>
                   </div>
                 </div>
 
                 <!-- Text input-->
                 <div class="form-group">
-                  <label class="col-md-4 control-label" for="product_name_fr">STORAGE</label>  
-                  <div class="col-md-4">
-                    <input name="minimum.Storage" placeholder="Storage" value=@(minimum != null ? minimum.Storage : "") class="form-control input-md" type="text" required>
+                  <label class="col-md-6 control-label" for="product_name_fr">STORAGE</label>  
+                  <div class="col-md-6">
+                    <input name="minimum.Storage" placeholder="Storage" value="@(minimum != null ? minimum.Storage : "")" class="form-control input-md" type="text" required>
                   </div>
                 </div>
 
                 <!-- Text input-->
                 <div class="form-group">
-                  <label class="col-md-4 control-label" for="product_name_fr">DIRECT X</label>  
-                  <div class="col-md-4">
-                    <input name="minimum.DirectX" placeholder="DirectX" value=@(minimum != null ? minimum.DirectX : "") class="form-control input-md" type="text" required>
+                  <label class="col-md-6 control-label" for="product_name_fr">DIRECT X</label>  
+                  <div class="col-md-6">
+                    <input name="minimum.DirectX" placeholder="DirectX" value="@(minimum != null ? minimum.DirectX : "")" class="form-control input-md" type="text" required>
                   </div>
                 </div>
 
                 <!-- Textarea -->
                 <div class="form-group">
-                  <label class="col-md-4 control-label" for="product_name_fr">GRAPHIC</label>  
-                  <div class="col-md-4">                     
+                  <label class="col-md-6 control-label" for="product_name_fr">GRAPHIC</label>  
+                  <div class="col-md-6">                     
                     <textarea class="form-control input-md" placeholder="Graphic" name="minimum.Graphic" required>@(minimum != null ? minimum.Graphic : "")</textarea>
                   </div>
                 </div>
 
                 <!-- Textarea -->
                 <div class="form-group">
-                  <label class="col-md-4 control-label" for="product_name_fr">OTHER</label>  
-                  <div class="col-md-4">                     
+                  <label class="col-md-6 control-label" for="product_name_fr">OTHER</label>  
+                  <div class="col-md-6">                     
                     <textarea class="form-control input-md" placeholder="Other" name="minimum.Other">@(minimum != null ? minimum.Other : "")</textarea>
                   </div>
                 </div>
@@ -217,56 +220,56 @@
 
                 <!-- Text input-->
                 <div class="form-group">
-                  <label class="col-md-4 control-label" for="product_name_fr">OS</label>  
-                  <div class="col-md-4">
-                    <input name="recommend.Os" placeholder="Os" value=@(recommend != null ? recommend.Os : "") class="form-control input-md" type="text" required>
+                  <label class="col-md-6 control-label" for="product_name_fr">OS</label>  
+                  <div class="col-md-6">
+                    <input name="recommend.Os" placeholder="Os" value="@(recommend != null ? recommend.Os : "")" class="form-control input-md" type="text" required>
                   </div>
                 </div>
 
                 <!-- Textarea -->
                 <div class="form-group">
-                  <label class="col-md-4 control-label" for="product_name_fr">PROCESSOR</label>  
-                  <div class="col-md-4">                     
+                  <label class="col-md-6 control-label" for="product_name_fr">PROCESSOR</label>  
+                  <div class="col-md-6">                     
                     <textarea class="form-control input-md" placeholder="Processor" name="recommend.Processor" required>@(recommend != null ? recommend.Processor : "")</textarea>
                   </div>
                 </div>
 
                 <!-- Text input-->
                 <div class="form-group">
-                  <label class="col-md-4 control-label" for="product_name_fr">MEMORY</label>  
-                  <div class="col-md-4">
-                    <input name="recommend.Memory" placeholder="Memory" value=@(recommend != null ? recommend.Memory : "") class="form-control input-md" type="text" required>
+                  <label class="col-md-6 control-label" for="product_name_fr">MEMORY</label>  
+                  <div class="col-md-6">
+                    <input name="recommend.Memory" placeholder="Memory" value="@(recommend != null ? recommend.Memory : "")" class="form-control input-md" type="text" required>
                   </div>
                 </div>
 
                 <!-- Text input-->
                 <div class="form-group">
-                  <label class="col-md-4 control-label" for="product_name_fr">STORAGE</label>  
-                  <div class="col-md-4">
-                    <input name="recommend.Storage" placeholder="Storage" value=@(recommend != null ? recommend.Storage : "") class="form-control input-md" type="text" required>
+                  <label class="col-md-6 control-label" for="product_name_fr">STORAGE</label>  
+                  <div class="col-md-6">
+                    <input name="recommend.Storage" placeholder="Storage" value="@(recommend != null ? recommend.Storage : "")" class="form-control input-md" type="text" required>
                   </div>
                 </div>
 
                 <!-- Text input-->
                 <div class="form-group">
-                  <label class="col-md-4 control-label" for="product_name_fr">DIRECT X</label>  
-                  <div class="col-md-4">
-                    <input name="recommend.DirectX" placeholder="DirectX" value=@(recommend != null ? recommend.DirectX : "") class="form-control input-md" type="text" required>
+                  <label class="col-md-6 control-label" for="product_name_fr">DIRECT X</label>  
+                  <div class="col-md-6">
+                    <input name="recommend.DirectX" placeholder="DirectX" value="@(recommend != null ? recommend.DirectX : "")" class="form-control input-md" type="text" required>
                   </div>
                 </div>
 
                 <!-- Textarea -->
                 <div class="form-group">
-                  <label class="col-md-4 control-label" for="product_name_fr">GRAPHIC</label>  
-                  <div class="col-md-4">                     
+                  <label class="col-md-6 control-label" for="product_name_fr">GRAPHIC</label>  
+                  <div class="col-md-6">                     
                     <textarea class="form-control input-md" placeholder="Graphic" name="recommend.Graphic" required>@(recommend != null ? recommend.Graphic : "")</textarea>
                   </div>
                 </div>
 
                 <!-- Textarea -->
                 <div class="form-group">
-                  <label class="col-md-4 control-label" for="product_name_fr">OTHER</label>  
-                  <div class="col-md-4">                     
+                  <label class="col-md-6 control-label" for="product_name_fr">OTHER</label>  
+                  <div class="col-md-6">                     
                     <textarea class="form-control input-md" placeholder="Other" name="recommend.Other">@(recommend != null ? recommend.Other : "")</textarea>
                   </div>
                 </div>
@@ -275,7 +278,7 @@
 
         <!-- Button -->
         <div class="form-group">
-          <div class="col-md-4">
+          <div class="col-md-12">
             <input type="submit" class="btn btn-primary m-3" value="Update Data" />
           </div>
         </div>

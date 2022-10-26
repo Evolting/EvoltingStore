@@ -18,7 +18,7 @@ namespace EvoltingStore.Pages
 
         public void OnGet()
         {
-            List<Game> topFavourites = context.Games.Include(g => g.Genres).Include(g => g.Comments).Include(g => g.Users).OrderBy(g => g.Users.Count).Take(6).ToList();
+            List<Game> topFavourites = context.Games.Include(g => g.Genres).Include(g => g.Comments).Include(g => g.Users).OrderByDescending(g => g.Users.Count).Take(6).ToList();
             List<Game> latestRelease = context.Games.Include(g => g.Genres).Include(g => g.Comments).Include(g => g.Users).OrderByDescending(g => g.ReleaseDate).Take(6).ToList();
             List<Game> latestUpdate = context.Games.Include(g => g.Genres).Include(g => g.Comments).Include(g => g.Users).OrderByDescending(g => g.UpdateDate).Take(6).ToList();
 

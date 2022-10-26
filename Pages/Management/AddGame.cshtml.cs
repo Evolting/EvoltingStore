@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Hosting;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 using EvoltingStore.Entity;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace EvoltingStore.Pages.Management
 {
@@ -22,10 +23,16 @@ namespace EvoltingStore.Pages.Management
 
         public void OnGet()
         {
+            List<Genre> genres = context.Genres.ToList();
+
+            TempData["genres"] = genres;
         }
 
-        public async Task<IActionResult> OnPost(IFormFile gameImg, Game game)
+        public async Task<IActionResult> OnPost(IFormFile gameImg, Game game, List<int> genres)
         {
+            var context = new EvoltingStoreContext();
+            List<Genre> allGenres = context.Genres.ToList();
+
             if (gameImg != null)
             {
                 var file = Path.Combine(_environment.ContentRootPath, "uploads", gameImg.FileName);
@@ -55,8 +62,15 @@ namespace EvoltingStore.Pages.Management
             game.Image = url;
             game.UpdateDate = DateTime.Now;
 
+            foreach(var g in genres)
+            {
+                game.Genres.Add(allGenres[g-1]);
+            }
+
             context.Games.Add(game);
             context.SaveChanges();
+
+            context = new EvoltingStoreContext();
 
             return Redirect("/Management/Games");
         }

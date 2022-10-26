@@ -18,6 +18,12 @@
     {
         userData = (User)Newtonsoft.Json.JsonConvert.DeserializeObject<User>(user);
     }
+
+    var orderBy = (String)ViewData["orderBy"];
+    var searchName = (String)ViewData["searchName"];
+    if (orderBy==null){
+        orderBy = "Name";
+    }
 }
 
 <!-- Page Preloder -->
@@ -139,15 +145,15 @@
                                     <div class="form-group m-2">
                                         <label for="searchName"><h3 style="color: papayawhip">Search</h3></label>
                                         <div>
-                                            <input type="text" name="searchName" placeholder="Game Name"/>
+                                            <input type="text" name="searchName" value="@(searchName != null ? searchName : "")" placeholder="Game Name"/>
                                         </div>
                                     </div>
                                     <div class="form-group m-2">
                                         <select name="orderBy">
-                                            <option value="Name">Name</option>
-                                            <option value="UpdateDate">Update Date</option>
-                                            <option value="ReleaseDate">Release Date</option>
-                                            <option value="Favourites">Favourites</option>
+                                            <option value="Name" selected="@(orderBy == "Name")">Name</option>
+                                            <option value="UpdateDate" selected="@(orderBy == "UpdateDate")">Update Date (Latest -> Oldest)</option>
+                                            <option value="ReleaseDate" selected="@(orderBy == "ReleaseDate")">Release Date (Latest -> Oldest)</option>
+                                            <option value="Favourites" selected="@(orderBy == "Favourites")">Favourites</option>
                                         </select>
                                     </div>
                                     <br></br><input class="btn btn-primary m-2" type="submit" value="Filter" />

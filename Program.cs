@@ -1,7 +1,11 @@
+using EvoltingStore.Hubs;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
+
+builder.Services.AddSignalR();
 
 builder.Services.AddDistributedMemoryCache();
 
@@ -22,6 +26,8 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+
+app.MapHub<CommentHub>("/commentHub");
 
 app.UseRouting();
 

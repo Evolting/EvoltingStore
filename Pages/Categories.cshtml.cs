@@ -11,7 +11,7 @@ namespace EvoltingStore.Pages
     {
         private EvoltingStoreContext context = new EvoltingStoreContext();
 
-        public void OnGet(int pageNumber)
+        public void OnGet(String orderBy)
         {
             List<Game> games = context.Games.Include(g => g.Genres).Include(g => g.Comments).Include(g => g.Users).OrderBy(g => g.Name).ToList();
             List<Genre> genres = context.Genres.ToList();
@@ -20,6 +20,28 @@ namespace EvoltingStore.Pages
             {
                 selected.Add(false);
             }
+
+            if (orderBy != null && orderBy.Length > 0)
+            {
+                switch (orderBy)
+                {
+                    case "Name":
+                        games = games.OrderByDescending(g => g.Name).ToList();
+                        break;
+                    case "UpdateDate":
+                        games = games.OrderByDescending(g => g.UpdateDate).ToList();
+                        break;
+                    case "ReleaseDate":
+                        games = games.OrderByDescending(g => g.ReleaseDate).ToList();
+                        break;
+                    case "Favourites":
+                        games = games.OrderByDescending(g => g.Users.Count).ToList();
+                        break;
+                }
+
+                ViewData["orderBy"] = orderBy;
+            }
+
 
             ViewData["games"] = games;
             ViewData["genres"] = genres;
@@ -67,9 +89,35 @@ namespace EvoltingStore.Pages
                 }
             }
 
+            if(searchName != null && searchName.Length > 0)
+            {
+                games = (from g in games
+                         where g.Name.Contains(searchName)
+                         select g).ToList();
+            }
+
+            switch (orderBy)
+            {
+                case "Name":
+                    games = games.OrderByDescending(g => g.Name).ToList();
+                    break;
+                case "UpdateDate":
+                    games = games.OrderByDescending(g => g.UpdateDate).ToList();
+                    break;
+                case "ReleaseDate":
+                    games = games.OrderByDescending(g => g.ReleaseDate).ToList();
+                    break;
+                case "Favourites":
+                    games = games.OrderByDescending(g => g.Users.Count).ToList();
+                    break;
+            }
+
             ViewData["games"] = games;
             ViewData["genres"] = genres;
             ViewData["selected"] = selected;
+
+            ViewData["orderBy"] = orderBy;
+            ViewData["searchName"] = searchName;
         }
     }
 }
