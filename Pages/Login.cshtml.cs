@@ -12,7 +12,14 @@ namespace EvoltingStore.Pages
 
         public void OnGet()
         {
-            ViewData["error"] = "";
+            if (TempData.ContainsKey("message"))
+            {
+                ViewData["message"] = TempData["message"].ToString();
+            }
+            else
+            {
+                ViewData["message"] = "";
+            }
         }
 
         public IActionResult OnPost(String username, String password)
@@ -21,9 +28,9 @@ namespace EvoltingStore.Pages
 
             if (user == null)
             {
-                ViewData["error"] = "Wrong credential information";
+                ViewData["message"] = "Wrong credential information";
 
-                return Redirect("/Login");
+                return Page();
             }
             else
             {

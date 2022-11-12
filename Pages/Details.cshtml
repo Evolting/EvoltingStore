@@ -11,6 +11,7 @@
     var game = (Game)ViewData["game"];
     var minimum = (GameRequirement)ViewData["minimum"];
     var recommend = (GameRequirement)ViewData["recommend"];
+    var news = (List<News>)ViewData["news"];
 
     var user = HttpContext.Session.GetString("user");
     var userData = (User)ViewData["userDetail"];
@@ -42,11 +43,11 @@
                         <ul>
                             <li><a href="/Index">Homepage</a></li>
                             <li><a href="/Categories">Browse</a></li>
-                            <li><a href="#">Our Blog</a></li>
+                            <li><a href="/Blog">Our Blog</a></li>
                             <li><a href="#">Contacts</a></li>
                             @if (userData != null)
                             {
-                                <li><a href="#">My Favourite</a></li>
+                                    <li><a href="#">My Favourite</a></li>
                             }
                         </ul>
                     </nav>
@@ -55,15 +56,15 @@
             <div class="col-lg-2">
                 <div class="header__right">
                         <a href="#" class="search-switch"><span class="icon_search"></span></a>
-                        @if (user != null)
-                        {
-                            <a href="/Profile"><span class="icon_profile"></span></a>
-                        }
-                        else
-                        {
-                            <a href="/Login">Login Now</a>
-                        }
-                </div>
+                    @if (user != null)
+                    {
+                                    <a href="/Profile"><span class="icon_profile"></span></a>
+                    }
+                    else
+                    {
+                                    <a href="/Login">Login Now</a>
+                    }
+                    </div>
             </div>
         </div>
         <div id="mobile-menu-wrap"></div>
@@ -163,7 +164,7 @@
             </div>
             <div class="row">
                 <div class="col-lg-8 col-md-8">
-                    <div class="anime__details__review">
+                    <div class="anime__details__review" id="anime__details__review">
                         <div class="section-title">
                             <h5>Reviews</h5>
                         </div>
@@ -193,10 +194,11 @@
                             <div class="section-title">
                                 <h5>Your Comment</h5>
                             </div>
-                            <form method="post" asp-page-handler="Comment">
-                                <input type="text" name="gameId" value="@game.GameId" hidden/>
-                                <textarea name="messageInput" placeholder="Your Comment"></textarea>
-                                <input type="submit" class="btn btn-success" value="Review"/>
+                            <form action="#">
+                                <input type="text" id="gameId" value="@game.GameId" hidden readonly>
+                                <input type="text" id="userId" value="@userData.UserId" hidden readonly>
+                                <textarea id="messageInput" placeholder="Your Comment"></textarea>
+                                <button id="sendButton"><i class="fa fa-location-arrow"></i> Review</button>
                             </form>
                         </div>
                     }
@@ -206,7 +208,14 @@
                         <div class="section-title">
                             <h5>you might like...</h5>
                         </div>
-                        <div class="product__sidebar__view__item set-bg" data-setbg="img/sidebar/tv-1.jpg">
+                        @foreach(var n in news){
+                            <div class="product__sidebar__view__item set-bg" data-setbg="@n.Image">
+                                <div class="ep">@n.Date</div>
+                                <div class="view"><i class="fa fa-eye"></i> 9141</div>
+                                <h5><a href="@n.Link">@n.Title</a></h5>
+                            </div>
+                        }
+@*                        <div class="product__sidebar__view__item set-bg" data-setbg="img/sidebar/tv-1.jpg">
                             <div class="ep">18 / ?</div>
                             <div class="view"><i class="fa fa-eye"></i> 9141</div>
                             <h5><a href="#">Boruto: Naruto next generations</a></h5>
@@ -225,7 +234,7 @@
                             <div class="ep">18 / ?</div>
                             <div class="view"><i class="fa fa-eye"></i> 9141</div>
                             <h5><a href="#">Fate/stay night: Heaven's Feel I. presage flower</a></h5>
-                        </div>
+                        </div>*@
                     </div>
                 </div>
             </div>
@@ -299,6 +308,9 @@
       }
     }
 </script>
+
+<script src="~/microsoft-signalr/signalr.min.js"></script>
+<script src="~/js/site.js" asp-append-version="true"></script>
 
 <style>
     .dropbtn {

@@ -2,7 +2,7 @@
 @model EvoltingStore.Pages.Management.GamesModel
 @using EvoltingStore.Entity
 @{
-    Layout = "_Layout";
+    Layout = "Shared/_Layout";
     ViewData["Title"] = "Games Management";
 
     var user = (String)HttpContext.Session.GetString("user");

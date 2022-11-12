@@ -8,6 +8,7 @@ using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 using EvoltingStore.Entity;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace EvoltingStore.Pages.Management
 {
@@ -21,12 +22,25 @@ namespace EvoltingStore.Pages.Management
             _environment = environment;
         }
 
-        public void OnGet()
+        public IActionResult OnGet()
         {
-            List<Genre> genres = context.Genres.ToList();
 
-            TempData["genres"] = genres;
+            String userJSON = (String)HttpContext.Session.GetString("user");
+            User user = (User)Newtonsoft.Json.JsonConvert.DeserializeObject<User>(userJSON);
+            if(user.RoleId == 1)
+            {
+                List<Genre> allGenres = context.Genres.ToList();
+
+                string jsonGenre = Newtonsoft.Json.JsonConvert.SerializeObject(allGenres);
+
+                ViewData["genres"] = jsonGenre;
+
+                return Page();
+            }
+
+            return Redirect("/Error");
         }
+
 
         public async Task<IActionResult> OnPost(IFormFile gameImg, Game game, List<int> genres)
         {

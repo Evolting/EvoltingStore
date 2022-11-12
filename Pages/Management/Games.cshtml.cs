@@ -8,16 +8,43 @@ namespace EvoltingStore.Pages.Management
     {
         private EvoltingStoreContext context = new EvoltingStoreContext();
 
-        public void OnGet()
+        public IActionResult OnGet()
         {
-            List<Game> games = context.Games.ToList();
+            String userJSON = (String)HttpContext.Session.GetString("user");
+            User user = (User)Newtonsoft.Json.JsonConvert.DeserializeObject<User>(userJSON);
+            if (user.RoleId == 1)
+            {
+                List<Game> games = context.Games.ToList();
 
-            ViewData["games"] = games;
+                ViewData["games"] = games;
+
+                return Page();
+            }
+
+            return Redirect("/Error");
         }
 
-        public void OnPostRemove(int gameId)
+        public IActionResult OnPostRemove(int gameId)
         {
+            String userJSON = (String)HttpContext.Session.GetString("user");
+            User user = (User)Newtonsoft.Json.JsonConvert.DeserializeObject<User>(userJSON);
+            if (user.RoleId == 1)
+            {
+                Game g = context.Games.FirstOrDefault(g => g.GameId == gameId);
 
+                context.Remove(g);
+                context.SaveChanges();
+
+                context = new EvoltingStoreContext();
+
+                List<Game> games = context.Games.ToList();
+
+                ViewData["games"] = games;
+
+                return Page();
+            }
+
+            return Redirect("/Error");
         }
     }
 }

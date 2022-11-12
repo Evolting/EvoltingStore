@@ -9,18 +9,20 @@ namespace EvoltingStore.Pages.Management
     {
         private EvoltingStoreContext context = new EvoltingStoreContext();
 
-        public void OnGet()
+        public IActionResult OnGet()
         {
-            var user = (String)HttpContext.Session.GetString("user");
-            var userData = (User)Newtonsoft.Json.JsonConvert.DeserializeObject<User>(user);
-            if(userData.RoleId != 1)
+            String userJSON = (String)HttpContext.Session.GetString("user");
+            User user = (User)Newtonsoft.Json.JsonConvert.DeserializeObject<User>(userJSON);
+            if (user.RoleId == 1)
             {
-                return;
+                List<User> users = context.Users.Include(u => u.Role).Include(u => u.UserDetail).ToList();
+
+                ViewData["users"] = users;
+
+                return Page();
             }
 
-            List<User> users = context.Users.Include(u => u.Role).Include(u => u.UserDetail).ToList();
-
-            ViewData["users"] = users;
+            return Redirect("/Error");
         }
 
         public void OnPostStatus(int userId)

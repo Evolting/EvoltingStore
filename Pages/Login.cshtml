@@ -8,7 +8,7 @@
 }
 
 @{
-    var errorMessage = (String)ViewData["error"];   
+    var errorMessage = (String)ViewData["message"];   
 }
 
 <!-- Page Preloder -->
@@ -22,7 +22,7 @@
         <div class="row">
             <div class="col-lg-2">
                 <div class="header__logo">
-                    <a href="./index.html">
+                    <a href="/Index">
                         <img src="img/logo.png" alt="">
                     </a>
                 </div>
@@ -33,7 +33,7 @@
                         <ul>
                             <li><a href="/Index">Homepage</a></li>
                             <li><a href="/Categories">Browse</a></li>
-                            <li><a href="#">Our Blog</a></li>
+                            <li><a href="/Blog">Our Blog</a></li>
                             <li><a href="#">Contacts</a></li>
                         </ul>
                     </nav>
@@ -68,7 +68,7 @@
 
 @if(errorMessage.Length > 0){
     <div class="alert alert-danger alert-dismissible">
-      <strong>Failed to authenticate!</strong> @errorMessage
+    @errorMessage
     </div>
 }
 
@@ -85,7 +85,7 @@
                             <span class="icon_mail"></span>
                         </div>
                         <div class="input__item">
-                            <input type="text" name="password" placeholder="Password">
+                            <input type="password" name="password" placeholder="Password">
                             <span class="icon_lock"></span>
                         </div>
                         <input type="submit" class="site-btn" value="Login Now"/>
@@ -96,7 +96,7 @@
             <div class="col-lg-6">
                 <div class="login__register">
                     <h3>Dont’t Have An Account?</h3>
-                    <a href="/Signup" class="primary-btn">Register Now</a>
+                    <a href="/Register" class="primary-btn">Register Now</a>
                 </div>
             </div>
         </div>

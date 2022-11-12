@@ -1,8 +1,21 @@
 ﻿@page
-@model EvoltingStore.Pages.SignupModel
+@model EvoltingStore.Pages.BlogModel
+@using EvoltingStore.Entity
+
 @{
     Layout = "_Layout";
-    ViewData["Title"] = "Sign Up";
+    ViewData["Title"] = "Blog";
+}
+
+@{
+    var news = (List<News>)ViewData["news"];
+
+    var user = HttpContext.Session.GetString("user");
+    var userData = ViewData["userDetail"];
+    if (user != null)
+    {
+        userData = (User)Newtonsoft.Json.JsonConvert.DeserializeObject<User>(user);
+    }
 }
 
 <!-- Page Preloder -->
@@ -27,17 +40,28 @@
                         <ul>
                             <li><a href="/Index">Homepage</a></li>
                             <li><a href="/Categories">Browse</a></li>
-                            <li><a href="/Blog">Our Blog</a></li>
+                            <li class="active"><a href="/Blog">Our Blog</a></li>
                             <li><a href="#">Contacts</a></li>
+                            @if (userData != null)
+                            {
+                                    <li><a href="#">My Favourite</a></li>
+                            }
                         </ul>
                     </nav>
                 </div>
             </div>
             <div class="col-lg-2">
                 <div class="header__right">
-                    <a href="#" class="search-switch"><span class="icon_search"></span></a>
-                    <a href="/Login">Login Now</a>
-                </div>
+                        <a href="#" class="search-switch"><span class="icon_search"></span></a>
+                    @if (user != null)
+                    {
+                                    <a href="/Profile"><span class="icon_profile"></span></a>
+                    }
+                    else
+                    {
+                                    <a href="/Login">Login Now</a>
+                    }
+                    </div>
             </div>
         </div>
         <div id="mobile-menu-wrap"></div>
@@ -45,60 +69,55 @@
 </header>
 <!-- Header End -->
 
-<!-- Normal Breadcrumb Begin -->
-<section class="normal-breadcrumb set-bg" data-setbg="img/normal-breadcrumb.jpg">
+<!-- Product Section Begin -->
+<section class="product-page spad">
     <div class="container">
         <div class="row">
-            <div class="col-lg-12 text-center">
-                <div class="normal__breadcrumb__text">
-                    <h2>Sign Up</h2>
-                    <p>Welcome to the official Anime blog.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-<!-- Normal Breadcrumb End -->
-
-<!-- Signup Section Begin -->
-<section class="signup spad">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-6">
-                <div class="login__form">
-                    <h3>Sign Up</h3>
-                    <form action="#">
-                        <div class="input__item">
-                            <input type="text" placeholder="Email address">
-                            <span class="icon_mail"></span>
-                        </div>
-                        <div class="input__item">
-                            <input type="text" placeholder="Your Name">
-                            <span class="icon_profile"></span>
-                        </div>
-                        <div class="input__item">
-                            <input type="text" placeholder="Password">
-                            <span class="icon_lock"></span>
-                        </div>
-                        <button type="submit" class="site-btn">Register</button>
-                    </form>
-                    <h5>Already have an account? <a href="#">Log In!</a></h5>
-                </div>
-            </div>
-            <div class="col-lg-6">
-                    <div class="login__social__links">
-                        <h3>OUR MOTTO</h3>
-                        <ul>
-                            <li style="color: papayawhip">FREE</li>
-                            <li style="color: papayawhip">FUN</li>
-                            <li style="color: papayawhip">FAITHFUL</li>
-                        </ul>
+            <div class="col-lg-10">
+                <div class="product__page__content">
+                    <div class="row">
+                        @foreach (var n in news)
+                        {
+                            <div class="col-lg-6 col-md-12">
+                                <div class="product__item">
+                                        <div class="product__item__pic set-bg" data-setbg="@n.Image">
+                                        <div class="ep">@n.Date</div>
+                                    </div>
+                                    <div class="product__item__text">
+                                        <h5><a href="@n.Link">@n.Title</a></h5>
+                                    </div>
+                                </div>
+                            </div>
+                        }
                     </div>
                 </div>
+            </div>
+            <div class="col-lg-2 col-md-4 col-sm-6">
+                <div class="product__sidebar">
+                    <div class="product__sidebar__view">
+                        <div class="section-title">
+                            <h5>Search for News</h5>
+                        </div>
+                        <div class="filter__gallery">
+                            <div class="filter-container">
+                                <form method="post">
+                                    <div class="form-group m-2">
+                                        <label for="searchName"><h3 style="color: papayawhip">Search</h3></label>
+                                        <div>
+                                            <input type="text" name="query" placeholder="Game Name"/>
+                                        </div>
+                                    </div>
+                                    <input class="btn btn-primary m-2" type="submit" value="Filter" />
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </section>
-<!-- Signup Section End -->
+<!-- Product Section End -->
 
 <!-- Footer Section Begin -->
 <footer class="footer">
@@ -143,3 +162,4 @@
     </div>
 </div>
 <!-- Search model end -->
+

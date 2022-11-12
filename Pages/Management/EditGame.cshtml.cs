@@ -19,30 +19,38 @@ namespace EvoltingStore.Pages.Management
             _environment = environment;
         }
 
-        public void OnGet(int gameId)
+        public IActionResult OnGet(int gameId)
         {
-            List<Genre> genres = context.Genres.ToList();
-            ViewData["genres"] = genres;
-            List<Boolean> selected = new List<Boolean>();
-            for (int i = 1; i <= genres.Count; i++)
+            String userJSON = (String)HttpContext.Session.GetString("user");
+            User user = (User)Newtonsoft.Json.JsonConvert.DeserializeObject<User>(userJSON);
+            if (user.RoleId == 1)
             {
-                selected.Add(false);
+                List<Genre> genres = context.Genres.ToList();
+                ViewData["genres"] = genres;
+                List<Boolean> selected = new List<Boolean>();
+                for (int i = 1; i <= genres.Count; i++)
+                {
+                    selected.Add(false);
+                }
+
+                Game game = context.Games.Include(g => g.Genres).FirstOrDefault(g => g.GameId == gameId);
+
+                foreach (var g in game.Genres)
+                {
+                    selected[g.GenreId - 1] = true;
+                }
+                ViewData["selected"] = selected;
+
+                GameRequirement minimum = context.GameRequirements.FirstOrDefault(gr => gr.GameId == gameId && gr.Type.Equals("minimum"));
+                GameRequirement recommend = context.GameRequirements.FirstOrDefault(gr => gr.GameId == gameId && gr.Type.Equals("recommend"));
+
+                ViewData["game"] = game;
+                ViewData["minimum"] = minimum;
+                ViewData["recommend"] = recommend;
+                return Page();
             }
 
-            Game game = context.Games.Include(g => g.Genres).FirstOrDefault(g => g.GameId == gameId);
-
-            foreach(var g in game.Genres)
-            {
-                selected[g.GenreId-1] = true;
-            }
-            ViewData["selected"] = selected;
-
-            GameRequirement minimum = context.GameRequirements.FirstOrDefault(gr => gr.GameId == gameId && gr.Type.Equals("minimum"));
-            GameRequirement recommend = context.GameRequirements.FirstOrDefault(gr => gr.GameId == gameId && gr.Type.Equals("recommend"));
-            
-            ViewData["game"] = game;
-            ViewData["minimum"] = minimum;
-            ViewData["recommend"] = recommend;
+            return Redirect("/Error");
         }
 
         public async Task<IActionResult> OnPost(IFormFile gameImg, Game game, GameRequirement minimum, GameRequirement recommend, List<int> genres)

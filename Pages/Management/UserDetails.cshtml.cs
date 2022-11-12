@@ -8,7 +8,7 @@ namespace EvoltingStore.Pages.Management
     {
         EvoltingStoreContext context = new EvoltingStoreContext();
 
-        public void OnGet(int userId)
+        public IActionResult OnGet(int userId)
         {
             //var user = (String)HttpContext.Session.GetString("user");
             //var userData = (User)Newtonsoft.Json.JsonConvert.DeserializeObject<User>(user);
@@ -16,10 +16,19 @@ namespace EvoltingStore.Pages.Management
             //{
             //    return;
             //}
+            String userJSON = (String)HttpContext.Session.GetString("user");
+            User user = (User)Newtonsoft.Json.JsonConvert.DeserializeObject<User>(userJSON);
+            if (user.RoleId == 1)
+            {
+                UserDetail userDetail = context.UserDetails.FirstOrDefault(ud => ud.UserId == userId);
 
-            UserDetail userDetail = context.UserDetails.FirstOrDefault(ud => ud.UserId == userId);
+                ViewData["profile"] = userDetail;
 
-            ViewData["profile"] = userDetail;
+                return Page();
+            }
+
+            return Redirect("/Error");
+
         }
     }
 }

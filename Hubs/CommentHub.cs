@@ -21,7 +21,11 @@ namespace EvoltingStore.Hubs
             context.Comments.Add(c);
             context.SaveChanges();
 
-            await Clients.All.SendAsync("ReceivedMess", userId, comment);
+            User u = context.Users.FirstOrDefault(u => u.UserId == uId);
+
+            String time = c.PostTime.ToShortDateString() + " " + c.PostTime.ToShortTimeString();
+
+            await Clients.All.SendAsync("ReceivedMess", u.Username, comment, time);
         }
     }
 }

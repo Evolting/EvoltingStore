@@ -133,7 +133,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Entity\" />
     <Folder Include="uploads\" />
     <Folder Include="wwwroot\uploads\" />
   </ItemGroup>
